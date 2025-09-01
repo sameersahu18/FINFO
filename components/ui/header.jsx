@@ -10,7 +10,7 @@ import Image from "next/image";
 
 const Header = () => {
   return (
-    <header className="fixed top-0 w-full bg-white/100 backdrop-blur-md z-50 border-b">
+    <header className="fixed top-0 w-full bg-grey backdrop-blur-md z-50 border-b">
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/">
           <Image
@@ -51,9 +51,9 @@ const Header = () => {
             </Link>
           </SignedIn>
 
-          <SignedOut>
-            <SignInButton mode="modal" forceRedirectUrl="/dashboard">
-              <Button variant="outline">Login</Button>
+          <SignedOut >
+            <SignInButton mode="modal" forceRedirectUrl="/main/dashboard">
+              <Button className="text-black" variant="outline">Login</Button>
             </SignInButton>
           </SignedOut>
 
@@ -64,7 +64,7 @@ const Header = () => {
                   avatarBox: "w-10 h-10",
                 },
               }}
-              afterSignOutUrl="/"
+              afterSignOut="/"
             />
           </SignedIn>
         </div>

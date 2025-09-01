@@ -1,3 +1,302 @@
+// "use client";
+
+// import { useEffect } from "react";
+// import { useForm } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { CalendarIcon, Loader2 } from "lucide-react";
+// import { format } from "date-fns";
+// import { useRouter, useSearchParams } from "next/navigation";
+// import useFetch from "@/hooks/use-fetch";
+// import { toast } from "sonner";
+
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
+// // import { Switch } from "@/components/ui/switch";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "@/components/ui/popover";
+// import { Calendar } from "@/components/ui/calendar";
+// import { CreateAccountDrawer } from "@/components/ui/create-account-drawer";
+// import { cn } from "@/lib/utils";
+// import { createTransaction, updateTransaction } from "@/actions/transaction";
+// import { transactionSchema } from "@/app/lib/schema";
+// import { ReceiptScanner } from "./recipt-scanner";
+
+// export function AddTransactionForm({
+//   accounts,
+//   categories,
+//   editMode = false,
+//   initialData = null,
+// }) {
+//   const router = useRouter();
+//   const searchParams = useSearchParams();
+//   const editId = searchParams.get("edit");
+
+//   const {
+//     register,
+//     handleSubmit,
+//     formState: { errors },
+//     watch,
+//     setValue,
+//     getValues,
+//     reset,
+//   } = useForm({
+//     resolver: zodResolver(transactionSchema),
+//     defaultValues:
+//       editMode && initialData
+//         ? {
+//             type: initialData.type,
+//             amount: initialData.amount.toString(),
+//             description: initialData.description,
+//             accountId: initialData.accountId,
+//             category: initialData.category,
+//             date: new Date(initialData.date),
+            
+//           }
+//         : {
+//             type: "EXPENSE",
+//             amount: "",
+//             description: "",
+//             accountId: accounts.find((ac) => ac.isDefault)?.id,
+//             date: new Date(),
+//             isRecurring: false,
+//           },
+//   });
+
+//   const {
+//     loading: transactionLoading,
+//     fn: transactionFn,
+//     data: transactionResult,
+//   } = useFetch(editMode ? updateTransaction : createTransaction);
+
+//   const onSubmit = (data) => {
+//     const formData = {
+//       ...data,
+//       amount: parseFloat(data.amount),
+//     };
+
+//     if (editMode) {
+//       transactionFn(editId, formData);
+//     } else {
+//       transactionFn(formData);
+//     }
+//   };
+
+//   const handleScanComplete = (scannedData) => {
+//     if (scannedData) {
+//       setValue("amount", scannedData.amount.toString());
+//       setValue("date", new Date(scannedData.date));
+//       if (scannedData.description) {
+//         setValue("description", scannedData.description);
+//       }
+//       if (scannedData.category) {
+//         setValue("category", scannedData.category);
+//       }
+//       toast.success("Receipt scanned successfully");
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (transactionResult?.success && !transactionLoading) {
+//       toast.success(
+//         editMode
+//           ? "Transaction updated successfully"
+//           : "Transaction created successfully"
+//       );
+//       reset();
+//       router.push(`/main/account/${transactionResult.data.accountId}`);
+//     }
+//   }, [transactionResult, transactionLoading, editMode]);
+
+//   const type = watch("type");
+// //   const isRecurring = watch("isRecurring");
+//   const date = watch("date");
+
+//   const filteredCategories = categories.filter(
+//     (category) => category.type === type
+//   );
+
+//   return (
+//     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+//       {/* Receipt Scanner - Only show in create mode */}
+//       {!editMode && <ReceiptScanner onScanComplete={handleScanComplete} />}
+
+//       {/* Type */}
+//       <div className="space-y-2">
+//         <label className="text-sm font-medium">Type</label>
+//         <Select
+//           onValueChange={(value) => setValue("type", value)}
+//           defaultValue={type}
+//         >
+//           <SelectTrigger>
+//             <SelectValue placeholder="Select type" />
+//           </SelectTrigger>
+//           <SelectContent>
+//             <SelectItem value="EXPENSE">Expense</SelectItem>
+//             <SelectItem value="INCOME">Income</SelectItem>
+//           </SelectContent>
+//         </Select>
+//         {errors.type && (
+//           <p className="text-sm text-red-500">{errors.type.message}</p>
+//         )}
+//       </div>
+
+//       {/* Amount and Account */}
+//       <div className="grid gap-6 md:grid-cols-2">
+//         <div className="space-y-2">
+//           <label className="text-sm font-medium">Amount</label>
+//           <Input
+//             type="number"
+//             step="0.01"
+//             placeholder="0.00"
+//             {...register("amount")}
+//           />
+//           {errors.amount && (
+//             <p className="text-sm text-red-500">{errors.amount.message}</p>
+//           )}
+//         </div>
+
+//         <div className="space-y-2">
+//           <label className="text-sm font-medium">Account</label>
+//           <Select
+//             onValueChange={(value) => setValue("accountId", value)}
+//             defaultValue={getValues("accountId")}
+//           >
+//             <SelectTrigger>
+//               <SelectValue placeholder="Select account" />
+//             </SelectTrigger>
+//             <SelectContent>
+//               {accounts.map((account) => (
+//                 <SelectItem key={account.id} value={account.id}>
+//                   {account.name} (${parseFloat(account.balance).toFixed(2)})
+//                 </SelectItem>
+//               ))}
+//               <CreateAccountDrawer>
+//                 <Button
+//                   variant="ghost"
+//                   className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+//                 >
+//                   Create Account
+//                 </Button>
+//               </CreateAccountDrawer>
+//             </SelectContent>
+//           </Select>
+//           {errors.accountId && (
+//             <p className="text-sm text-red-500">{errors.accountId.message}</p>
+//           )}
+//         </div>
+//       </div>
+
+//       {/* Category */}
+//       <div className="space-y-2">
+//         <label className="text-sm font-medium">Category</label>
+//         <Select
+//           onValueChange={(value) => setValue("category", value)}
+//           defaultValue={getValues("category")}
+//         >
+//           <SelectTrigger>
+//             <SelectValue placeholder="Select category" />
+//           </SelectTrigger>
+//           <SelectContent>
+//             {filteredCategories.map((category) => (
+//               <SelectItem key={category.id} value={category.id}>
+//                 {category.name}
+//               </SelectItem>
+//             ))}
+//           </SelectContent>
+//         </Select>
+//         {errors.category && (
+//           <p className="text-sm text-red-500">{errors.category.message}</p>
+//         )}
+//       </div>
+
+//       {/* Date */}
+//       <div className="text-black space-y-2">
+//         <label className="text-white text-sm font-medium">Date</label>
+//         <Popover>
+//           <PopoverTrigger asChild>
+//             <Button
+//               variant="outline"
+//               className={cn(
+//                 "w-full pl-3 text-left font-normal",
+//                 !date && "text-muted-foreground"
+//               )}
+//             >
+//               {date ? format(date, "PPP") : <span>Pick a date</span>}
+//               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+//             </Button>
+//           </PopoverTrigger>
+//           <PopoverContent className="w-auto p-0" align="start">
+//             <Calendar
+//               mode="single"
+//               selected={date}
+//               onSelect={(date) => setValue("date", date)}
+//               disabled={(date) =>
+//                 date > new Date() || date < new Date("1900-01-01")
+//               }
+//               initialFocus
+//             />
+//           </PopoverContent>
+//         </Popover>
+//         {errors.date && (
+//           <p className="text-sm text-red-500">{errors.date.message}</p>
+//         )}
+//       </div>
+
+//       {/* Description */}
+//       <div className="space-y-2">
+//         <label className="text-sm font-medium">Description</label>
+//         <Input placeholder="Enter description" {...register("description")} />
+//         {errors.description && (
+//           <p className="text-sm text-red-500">{errors.description.message}</p>
+//         )}
+//       </div>
+
+   
+
+//       {/* Actions */}
+//       <div className="flex gap-4">
+//         <Button
+//           type="button"
+//           variant="outline"
+//           className="text-black w-full"
+//           onClick={() => router.back()}
+//         >
+//           Cancel
+//         </Button>
+//         <Button type="submit" className="w-full" disabled={transactionLoading}>
+//           {transactionLoading ? (
+//             <>
+//               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+//               {editMode ? "Updating..." : "Creating..."}
+//             </>
+//           ) : editMode ? (
+//             "Update Transaction"
+//           ) : (
+//             "Create Transaction"
+//           )}
+//         </Button>
+//       </div>
+//     </form>
+//   );
+// }
+
+
+
+
+
+
+
+
 "use client";
 
 import { useEffect } from "react";
@@ -11,7 +310,6 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -60,7 +358,6 @@ export function AddTransactionForm({
             accountId: initialData.accountId,
             category: initialData.category,
             date: new Date(initialData.date),
-            
           }
         : {
             type: "EXPENSE",
@@ -83,7 +380,6 @@ export function AddTransactionForm({
       ...data,
       amount: parseFloat(data.amount),
     };
-
     if (editMode) {
       transactionFn(editId, formData);
     } else {
@@ -95,197 +391,173 @@ export function AddTransactionForm({
     if (scannedData) {
       setValue("amount", scannedData.amount.toString());
       setValue("date", new Date(scannedData.date));
-      if (scannedData.description) {
-        setValue("description", scannedData.description);
-      }
-      if (scannedData.category) {
-        setValue("category", scannedData.category);
-      }
+      if (scannedData.description) setValue("description", scannedData.description);
+      if (scannedData.category) setValue("category", scannedData.category);
       toast.success("Receipt scanned successfully");
     }
   };
 
   useEffect(() => {
     if (transactionResult?.success && !transactionLoading) {
-      toast.success(
-        editMode
-          ? "Transaction updated successfully"
-          : "Transaction created successfully"
-      );
+      toast.success(editMode ? "Transaction updated successfully" : "Transaction created successfully");
       reset();
       router.push(`/main/account/${transactionResult.data.accountId}`);
     }
   }, [transactionResult, transactionLoading, editMode]);
 
   const type = watch("type");
-//   const isRecurring = watch("isRecurring");
   const date = watch("date");
 
-  const filteredCategories = categories.filter(
-    (category) => category.type === type
-  );
+  const filteredCategories = categories.filter((category) => category.type === type);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* Receipt Scanner - Only show in create mode */}
-      {!editMode && <ReceiptScanner onScanComplete={handleScanComplete} />}
-
-      {/* Type */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Type</label>
-        <Select
-          onValueChange={(value) => setValue("type", value)}
-          defaultValue={type}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="EXPENSE">Expense</SelectItem>
-            <SelectItem value="INCOME">Income</SelectItem>
-          </SelectContent>
-        </Select>
-        {errors.type && (
-          <p className="text-sm text-red-500">{errors.type.message}</p>
+    <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6 rounded-2xl shadow-xl border border-gray-700">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 text-white">
+        {/* Receipt Scanner */}
+        {!editMode && (
+          <div className="mb-4">
+            <ReceiptScanner onScanComplete={handleScanComplete} />
+          </div>
         )}
-      </div>
 
-      {/* Amount and Account */}
-      <div className="grid gap-6 md:grid-cols-2">
+        {/* Type */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Amount</label>
-          <Input
-            type="number"
-            step="0.01"
-            placeholder="0.00"
-            {...register("amount")}
-          />
-          {errors.amount && (
-            <p className="text-sm text-red-500">{errors.amount.message}</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Account</label>
-          <Select
-            onValueChange={(value) => setValue("accountId", value)}
-            defaultValue={getValues("accountId")}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select account" />
+          <label className="text-sm font-semibold text-gray-300">Type</label>
+          <Select onValueChange={(value) => setValue("type", value)} defaultValue={type}>
+            <SelectTrigger className="bg-gray-800 border-gray-700">
+              <SelectValue placeholder="Select type" />
             </SelectTrigger>
-            <SelectContent>
-              {accounts.map((account) => (
-                <SelectItem key={account.id} value={account.id}>
-                  {account.name} (${parseFloat(account.balance).toFixed(2)})
-                </SelectItem>
-              ))}
-              <CreateAccountDrawer>
-                <Button
-                  variant="ghost"
-                  className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
-                >
-                  Create Account
-                </Button>
-              </CreateAccountDrawer>
+            <SelectContent className="bg-gray-900 text-white border-gray-700">
+              <SelectItem value="EXPENSE">Expense</SelectItem>
+              <SelectItem value="INCOME">Income</SelectItem>
             </SelectContent>
           </Select>
-          {errors.accountId && (
-            <p className="text-sm text-red-500">{errors.accountId.message}</p>
-          )}
+          {errors.type && <p className="text-sm text-red-500">{errors.type.message}</p>}
         </div>
-      </div>
 
-      {/* Category */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Category</label>
-        <Select
-          onValueChange={(value) => setValue("category", value)}
-          defaultValue={getValues("category")}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select category" />
-          </SelectTrigger>
-          <SelectContent>
-            {filteredCategories.map((category) => (
-              <SelectItem key={category.id} value={category.id}>
-                {category.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors.category && (
-          <p className="text-sm text-red-500">{errors.category.message}</p>
-        )}
-      </div>
-
-      {/* Date */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Date</label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full pl-3 text-left font-normal",
-                !date && "text-muted-foreground"
-              )}
-            >
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
-              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(date) => setValue("date", date)}
-              disabled={(date) =>
-                date > new Date() || date < new Date("1900-01-01")
-              }
-              initialFocus
+        {/* Amount + Account */}
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-300">Amount</label>
+            <Input
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              className="bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+              {...register("amount")}
             />
-          </PopoverContent>
-        </Popover>
-        {errors.date && (
-          <p className="text-sm text-red-500">{errors.date.message}</p>
-        )}
-      </div>
+            {errors.amount && <p className="text-sm text-red-500">{errors.amount.message}</p>}
+          </div>
 
-      {/* Description */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Description</label>
-        <Input placeholder="Enter description" {...register("description")} />
-        {errors.description && (
-          <p className="text-sm text-red-500">{errors.description.message}</p>
-        )}
-      </div>
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-300">Account</label>
+            <Select onValueChange={(value) => setValue("accountId", value)} defaultValue={getValues("accountId")}>
+              <SelectTrigger className="bg-gray-800 border-gray-700">
+                <SelectValue placeholder="Select account" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-900 text-white border-gray-700">
+                {accounts.map((account) => (
+                  <SelectItem key={account.id} value={account.id}>
+                    {account.name} (${parseFloat(account.balance).toFixed(2)})
+                  </SelectItem>
+                ))}
+                <CreateAccountDrawer>
+                  <Button variant="ghost" className="w-full justify-start text-blue-400 hover:bg-gray-800">
+                    + Create Account
+                  </Button>
+                </CreateAccountDrawer>
+              </SelectContent>
+            </Select>
+            {errors.accountId && <p className="text-sm text-red-500">{errors.accountId.message}</p>}
+          </div>
+        </div>
 
-   
+        {/* Category */}
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-gray-300">Category</label>
+          <Select onValueChange={(value) => setValue("category", value)} defaultValue={getValues("category")}>
+            <SelectTrigger className="bg-gray-800 border-gray-700">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-900 text-white border-gray-700">
+              {filteredCategories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.category && <p className="text-sm text-red-500">{errors.category.message}</p>}
+        </div>
 
-      {/* Actions */}
-      <div className="flex gap-4">
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={() => router.back()}
-        >
-          Cancel
-        </Button>
-        <Button type="submit" className="w-full" disabled={transactionLoading}>
-          {transactionLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {editMode ? "Updating..." : "Creating..."}
-            </>
-          ) : editMode ? (
-            "Update Transaction"
-          ) : (
-            "Create Transaction"
-          )}
-        </Button>
-      </div>
-    </form>
+        {/* Date */}
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-gray-300">Date</label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full pl-3 text-left font-normal bg-gray-800 border-gray-700 text-white hover:bg-gray-700",
+                  !date && "text-gray-400"
+                )}
+              >
+                {date ? format(date, "PPP") : <span>Pick a date</span>}
+                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="bg-gray-900 border-gray-700 text-white w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={(date) => setValue("date", date)}
+                disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+          {errors.date && <p className="text-sm text-red-500">{errors.date.message}</p>}
+        </div>
+
+        {/* Description */}
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-gray-300">Description</label>
+          <Input
+            placeholder="Enter description"
+            className="bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+            {...register("description")}
+          />
+          {errors.description && <p className="text-sm text-red-500">{errors.description.message}</p>}
+        </div>
+
+        {/* Actions */}
+        <div className="flex flex-col gap-4 pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full border-gray-600 text-gray-500 hover:bg-gray-800"
+            onClick={() => router.back()}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+            disabled={transactionLoading}
+          >
+            {transactionLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {editMode ? "Updating..." : "Creating..."}
+              </>
+            ) : editMode ? (
+              "Update Transaction"
+            ) : (
+              "Create Transaction"
+            )}
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 }

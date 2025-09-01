@@ -81,10 +81,10 @@ export function CreateAccountDrawer({ children }) {
         </DrawerHeader>
         <div className="px-4 pb-4">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
+            <div className="text-black space-y-2">
               <label
                 htmlFor="name"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-black text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Account Name
               </label>
@@ -98,10 +98,10 @@ export function CreateAccountDrawer({ children }) {
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className="text-black space-y-2">
               <label
                 htmlFor="type"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-black text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Account Type
               </label>
@@ -109,7 +109,7 @@ export function CreateAccountDrawer({ children }) {
                 onValueChange={(value) => setValue("type", value)}
                 defaultValue={watch("type")}
               >
-                <SelectTrigger id="type">
+                <SelectTrigger  id="type">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -122,10 +122,10 @@ export function CreateAccountDrawer({ children }) {
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className="text-black space-y-2">
               <label
                 htmlFor="balance"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-black text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Initial Balance
               </label>
@@ -160,7 +160,7 @@ export function CreateAccountDrawer({ children }) {
               />
             </div>
 
-            <div className="flex gap-4 pt-4">
+            <div className="text-black flex gap-4 pt-4">
               <DrawerClose asChild>
                 <Button type="button" variant="outline" className="flex-1">
                   Cancel

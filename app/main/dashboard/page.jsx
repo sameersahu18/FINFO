@@ -136,12 +136,12 @@ export default async function DashboardPage() {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {/* Add new account card */}
           <CreateAccountDrawer>
-            <Card className="group relative border-2 border-dashed border-gray-700 rounded-2xl cursor-pointer hover:scale-[1.03] hover:shadow-purple-500/40 transition-all duration-300 bg-gray-900/50 backdrop-blur-md">
+            <Card className=" group relative border-2 border-dashed border-gray-700 rounded-2xl cursor-pointer hover:scale-[1.03] hover:shadow-purple-500/40 transition-all duration-300 bg-gray-900/50 backdrop-blur-md">
               <CardContent className="flex flex-col items-center justify-center h-44 text-black">
                 <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white group-hover:scale-110 transition-transform duration-300 shadow-md">
                   <Plus className="h-6 w-6" />
                 </div>
-                <p className="mt-4 text-base font-semibold group-hover:text-indigo-400 transition-colors">
+                <p className="text-white mt-4 text-base font-semibold group-hover:text-indigo-400 transition-colors">
                   Add New Account
                 </p>
               </CardContent>
