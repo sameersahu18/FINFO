@@ -1,38 +1,3 @@
-// import React from 'react'
-// import Image from "next/image";
-// import Link from "next/link";
-
-// const HeroSection = () => {
-//   return (
-//     <div className='pb-20 px-4'>
-//       <h1>
-//         Manage Your Finances <br/> with Intelligence
-//       </h1>
-//       <p>
-//         An AI-powered financial management platform that helps you track,
-//         analyze, and optimize your personal finances with ease.
-//       </p>
-//       <div>
-//         <link href="/dashboard">
-//         <button size="lg" className="px-8">Get Started</button>
-//         </link>
-
-//         <div>
-            
-       
-//             <div>
-//                 <Image src="/mind.png" alt="App Screenshot" width={800} height={400} className="rounded-lg shadow-lg mt-10"/>
-//             </div>
-//               <div>
-//                 <Image src="/graphh.png" alt="App Screenshot" width={800} height={400} className="rounded-lg shadow-lg mt-10"/>
-//             </div>
-          
-//         </div>
-
-//       </div>
-//     </div>
-//   )
-// }
 
 // export default HeroSection
 "use client";
@@ -54,7 +19,7 @@ const HeroSection = () => {
     <section className="relative bg-gradient-to-br from-[#eef5fc] via-[#f9fafb] to-[#e4ecf7] w-full overflow-hidden min-h-screen flex items-center px-6 pb-30 pt-30">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 py-20">
         
-        {/* Left Text Content */}
+ 
         <div className="flex-1 max-w-xl">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
             Take Charge of Your <span className="text-blue-600">Financial Future</span>
@@ -69,7 +34,7 @@ const HeroSection = () => {
           </Link>
         </div>
 
-        {/* Right Parallax Graph */}
+
         <div
           className="flex-1 relative w-full max-w-2xl h-[350px] md:h-[400px] flex justify-center items-center"
           style={{

@@ -22,7 +22,7 @@ const Header = () => {
           />
         </Link>
 
-        {/* Navigation Links */}
+       
         <div className="hidden md:flex items-center space-x-8">
           <SignedOut>
             <a href="#features" className="text-gray-600 hover:text-blue-600">
@@ -34,7 +34,7 @@ const Header = () => {
           </SignedOut>
         </div>
 
-        {/* Action Buttons */}
+       
         <div className="flex items-center space-x-4">
           <SignedIn>
             <Link href="/main/dashboard">
@@ -64,7 +64,7 @@ const Header = () => {
                   avatarBox: "w-10 h-10",
                 },
               }}
-              afterSignOut="/"
+              // afterSignOut="/"
             />
           </SignedIn>
         </div>

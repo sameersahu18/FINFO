@@ -10,10 +10,10 @@ import { motion } from "framer-motion";
 export default function Home() {
   return (
     <div className="mt-9">
-      {/* Hero Section */}
+      
       <HeroSection />
 
-      {/* Stats Section */}
+      
       <section className="py-14 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
@@ -36,7 +36,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
+
       <section
         id="features"
         className="py-20 bg-gradient-to-b from-white via-slate-50 to-slate-100"
